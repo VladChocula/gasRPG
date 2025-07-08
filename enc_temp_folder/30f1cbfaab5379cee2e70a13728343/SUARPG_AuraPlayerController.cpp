@@ -135,7 +135,7 @@ void ASUARPG_AuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 	//GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, *InputTag.ToString());
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		bTargetting = thisActor ? true : false;
+		bTargetting = thisActor == nullptr ? true : false;
 		bAutoRunning = false;
 	}
 	

@@ -13,6 +13,7 @@ struct FInputActionValue;
 class IHighlightInterface;
 class UAuraInputConfig;
 class UAuraAbilitySystemComponent;
+class USplineComponent;
 
 /**
  * 
@@ -44,6 +45,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
 
+	//Utility that returns that sets the AbilitySystemComponent on First Call and returns it after.
 	UAuraAbilitySystemComponent* GetASC();
 
 	void Move(const FInputActionValue& InputActionValue);
@@ -52,10 +54,24 @@ private:
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
 
+	//Highlighting Functionality
 	void CursorTrace();
-
-
 	TScriptInterface<IHighlightInterface> lastActor;
 	TScriptInterface<IHighlightInterface> thisActor;
+
+	/*Click To Move Implementation*/
+	FVector CachedDestination = FVector::ZeroVector;
+	float FollowTime = 0.f;
+	float ShortPressThreshold = 0.5f;
+	bool bAutoRunning = false;
+	bool bTargetting = false;
+
+	UPROPERTY(EditDefaultsOnly)
+	float AutoRunAcceptanceRadius = 50.f;
+
+	//This is the smooth path created between you clicking a point and your character moving to it
+	UPROPERTY(VisibleAnywhere) 
+	TObjectPtr<USplineComponent> Spline; 
+	/* End Click to Move Implementation functionality*/
 
 };
