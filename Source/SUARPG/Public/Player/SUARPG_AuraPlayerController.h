@@ -41,6 +41,11 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UAuraInputConfig> InputConfig;
 
+	UPROPERTY()
+	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
+
+	UAuraAbilitySystemComponent* GetASC();
+
 	void Move(const FInputActionValue& InputActionValue);
 
 	void AbilityInputTagPressed(FGameplayTag InputTag);
