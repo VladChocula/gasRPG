@@ -54,10 +54,12 @@ private:
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
 
-	//Highlighting Functionality
+	/*Highlighting Functionality*/
 	void CursorTrace();
 	TScriptInterface<IHighlightInterface> lastActor;
 	TScriptInterface<IHighlightInterface> thisActor;
+	FHitResult CursorHit; //This is also being used for click/hold-to-move functionality
+	/*End Highlighting Functionality*/
 
 	/*Click To Move Implementation*/
 	FVector CachedDestination = FVector::ZeroVector;
@@ -72,6 +74,10 @@ private:
 	//This is the smooth path created between you clicking a point and your character moving to it
 	UPROPERTY(VisibleAnywhere) 
 	TObjectPtr<USplineComponent> Spline; 
+
+	//Function that determines distance to Spline destination and keeps autorunning on LMB click until
+	//Within AutoRunAcceptanceRadius.
+	void AutoRun();
 	/* End Click to Move Implementation functionality*/
 
 };
