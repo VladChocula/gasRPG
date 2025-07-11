@@ -27,9 +27,14 @@ void ASUARPG_BaseCharacter::BeginPlay()
 	
 }
 
+FVector ASUARPG_BaseCharacter::GetCombatSocketLocation()
+{
+	check(Weapon);
+	return Weapon->GetSocketLocation(WeaponTipSocketName);
+}
+
 void ASUARPG_BaseCharacter::InitAbilityActorInfo()
 {
-
 }
 
 void ASUARPG_BaseCharacter::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const
