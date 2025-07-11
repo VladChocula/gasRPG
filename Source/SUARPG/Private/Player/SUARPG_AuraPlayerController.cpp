@@ -114,6 +114,8 @@ void ASUARPG_AuraPlayerController::SetupInputComponent()
 	UAuraInputComponent* AuraInputComponent = CastChecked<UAuraInputComponent>(InputComponent);
 
 	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASUARPG_AuraPlayerController::Move);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &ThisClass::ShiftPressed);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ThisClass::ShiftReleased);
 	AuraInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
 
@@ -165,14 +167,12 @@ void ASUARPG_AuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag
 		return;
 	}
 
-	if (bTargetting) //We are targetting an enemy - hit them with any abilities marked to go off when released
+	if (GetASC())
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagReleased(InputTag);
-		}
+		GetASC()->AbilityInputTagReleased(InputTag);
 	}
-	else //Click-to-move behavior
+
+	if (!bTargetting && !bShiftKeyDown) //We are targetting an enemy - hit them with any abilities marked to go off when released
 	{
 		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn) //Create a navigation path/spline
@@ -183,7 +183,7 @@ void ASUARPG_AuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag
 				for (const FVector& PointLoc : NavPath->PathPoints)
 				{
 					Spline->AddSplinePoint(PointLoc, ESplineCoordinateSpace::World);
-					
+
 				}
 				CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
 				bAutoRunning = true;
@@ -206,7 +206,7 @@ void ASUARPG_AuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		return;
 	}
 	
-	if (bTargetting) //We are clicking on an enemy, so fire off a held gameplay ability
+	if (bTargetting || bShiftKeyDown) //We are clicking on an enemy, so fire off a held gameplay ability
 	{
 		if (GetASC())
 		{
