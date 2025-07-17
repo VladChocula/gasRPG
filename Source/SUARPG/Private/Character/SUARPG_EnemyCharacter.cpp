@@ -5,6 +5,9 @@
 #include "SUARPG/SUARPG.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "Components/WidgetComponent.h"
+#include "AbilitySystem/AuraAttributeSet.h"
+#include "UI/Widget/SUARPG_UserWidget.h"
 
 ASUARPG_EnemyCharacter::ASUARPG_EnemyCharacter()
 {
@@ -15,6 +18,9 @@ ASUARPG_EnemyCharacter::ASUARPG_EnemyCharacter()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
+
+	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
+	HealthBar->SetupAttachment(GetRootComponent());
 }
 
 void ASUARPG_EnemyCharacter::HighlightActor()
@@ -46,12 +52,40 @@ void ASUARPG_EnemyCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	InitAbilityActorInfo();
+
+	if (USUARPG_UserWidget* AUserWidget = Cast<USUARPG_UserWidget>(HealthBar->GetUserWidgetObject()))
+	{
+		AUserWidget->SetWidgetController(this);
+	}
+
+	if (const UAuraAttributeSet* AAS = CastChecked<UAuraAttributeSet>(AttributeSet))
+	{
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AAS->GetHealthAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData Data) 
+			{
+				OnHealthChanged.Broadcast(Data.NewValue);
+			}
+		);
+
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AAS->GetMaxHealthAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData Data)
+			{
+				OnMaxHealthChanged.Broadcast(Data.NewValue);
+			}
+		);
+		//Broadcast initial health and maxhealth values for the enemy
+		OnHealthChanged.Broadcast(AAS->GetHealth());
+		OnMaxHealthChanged.Broadcast(AAS->GetMaxHealth());
+	}
+	
 }
 
 void ASUARPG_EnemyCharacter::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+
+	InitializeDefaultAttributes();
 }
 
 int32 ASUARPG_EnemyCharacter::GetPlayerLevel()

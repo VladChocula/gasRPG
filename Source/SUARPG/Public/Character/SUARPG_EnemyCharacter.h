@@ -5,8 +5,11 @@
 #include "CoreMinimal.h"
 #include "Character/SUARPG_BaseCharacter.h"
 #include "Interaction/HighlightInterface.h"
+#include "UI/WidgetController/OverlayWidgetController.h"
 #include "SUARPG_EnemyCharacter.generated.h"
 
+
+class UWidgetComponent;
 /**
  * 
  */
@@ -22,6 +25,12 @@ public:
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
 	//End Enemy Interface
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignature OnHealthChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignature OnMaxHealthChanged;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -30,8 +39,10 @@ protected:
 
 	/** Combat Interface **/
 	virtual int32 GetPlayerLevel() override;
-
 	/** End Combat Interface **/
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> HealthBar;
 
 private:
 	
