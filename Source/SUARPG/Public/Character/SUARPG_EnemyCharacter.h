@@ -6,6 +6,7 @@
 #include "Character/SUARPG_BaseCharacter.h"
 #include "Interaction/HighlightInterface.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "SUARPG_EnemyCharacter.generated.h"
 
 
@@ -44,8 +45,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Character Class Defaults")
+	int32 Level = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Character Class Defaults")
+	ECharacterClass CharacterClass = ECharacterClass::Warrior;
+
+	virtual void InitializeDefaultAttributes() const override;
+
 private:
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess="true"), Category = "Character Class Defaults")
-	int32 Level = 1;
+	
 };

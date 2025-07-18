@@ -8,6 +8,7 @@
 #include "Components/WidgetComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "UI/Widget/SUARPG_UserWidget.h"
+#include "AbilitySystem/AuraABSLibrary.h"
 
 ASUARPG_EnemyCharacter::ASUARPG_EnemyCharacter()
 {
@@ -91,4 +92,9 @@ void ASUARPG_EnemyCharacter::InitAbilityActorInfo()
 int32 ASUARPG_EnemyCharacter::GetPlayerLevel()
 {
 	return Level;
+}
+
+void ASUARPG_EnemyCharacter::InitializeDefaultAttributes() const
+{
+	UAuraABSLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }
