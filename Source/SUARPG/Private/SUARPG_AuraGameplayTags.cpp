@@ -62,5 +62,11 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	);
 #pragma endregion
 
+#pragma region Damage
+	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage"),
+		FString("Damage")
+	);
+#pragma endregion
 }
 

@@ -184,6 +184,11 @@ UFUNCTION()
 void OnRep_ManaRegen(const FGameplayAttributeData& OldManaRegen) const;
 #pragma endregion
 
+#pragma region MetaAttributes
+UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes") 
+FGameplayAttributeData IncDamage;
+ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncDamage);
+#pragma endregion
 
 
 private:

@@ -45,6 +45,10 @@
 	FGameplayTag InputTag_4;
 #pragma endregion
 
+#pragma region Damage
+	FGameplayTag Damage;
+#pragma endregion
+
  protected:
 
  private:
