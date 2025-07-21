@@ -68,5 +68,12 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FString("Damage")
 	);
 #pragma endregion
+
+#pragma region Effects
+	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Effects.HitReact"),
+		FString("Tag that is given when a character has been hit")
+	);
+#pragma endregion
 }
 

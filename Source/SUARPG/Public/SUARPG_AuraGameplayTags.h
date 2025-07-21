@@ -49,6 +49,10 @@
 	FGameplayTag Damage;
 #pragma endregion
 
+#pragma region Effects
+	FGameplayTag Effects_HitReact;
+#pragma endregion
+
  protected:
 
  private:

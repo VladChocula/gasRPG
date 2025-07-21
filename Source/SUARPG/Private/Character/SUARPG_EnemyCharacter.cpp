@@ -9,6 +9,8 @@
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "UI/Widget/SUARPG_UserWidget.h"
 #include "AbilitySystem/AuraABSLibrary.h"
+#include "SUARPG_AuraGameplayTags.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ASUARPG_EnemyCharacter::ASUARPG_EnemyCharacter()
 {
@@ -51,7 +53,7 @@ void ASUARPG_EnemyCharacter::UnHighlightActor()
 void ASUARPG_EnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	InitAbilityActorInfo();
 
 	if (USUARPG_UserWidget* AUserWidget = Cast<USUARPG_UserWidget>(HealthBar->GetUserWidgetObject()))
@@ -74,11 +76,25 @@ void ASUARPG_EnemyCharacter::BeginPlay()
 				OnMaxHealthChanged.Broadcast(Data.NewValue);
 			}
 		);
+
+		
+		AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTags::Get().Effects_HitReact, EGameplayTagEventType::NewOrRemoved)
+			.AddUObject(
+				this,
+				&ASUARPG_EnemyCharacter::HitReactTagChanged
+			);
 		//Broadcast initial health and maxhealth values for the enemy
 		OnHealthChanged.Broadcast(AAS->GetHealth());
 		OnMaxHealthChanged.Broadcast(AAS->GetMaxHealth());
 	}
 	
+}
+
+void ASUARPG_EnemyCharacter::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bHitReacting = NewCount > 0;
+
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
 }
 
 void ASUARPG_EnemyCharacter::InitAbilityActorInfo()

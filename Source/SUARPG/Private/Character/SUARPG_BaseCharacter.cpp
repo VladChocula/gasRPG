@@ -29,6 +29,11 @@ UAbilitySystemComponent* ASUARPG_BaseCharacter::GetAbilitySystemComponent() cons
 	return AbilitySystemComponent;
 }
 
+UAnimMontage* ASUARPG_BaseCharacter::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
 void ASUARPG_BaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
